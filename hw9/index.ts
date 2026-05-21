@@ -1,11 +1,9 @@
-import { Player } from "./Player";
+import { Player } from './Player.js'
 
-import { Game } from "./Game";
+import { Game } from './Game.js'
 
+const player = new Player('Kseniia', 100)
 
-const player = new Player("Kseniia", 100);
+const game = new Game(player)
 
-const game = new Game(player);
-
-game.start();
-
+game.start()

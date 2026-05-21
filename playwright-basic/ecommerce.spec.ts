@@ -1,15 +1,17 @@
 import { test, expect } from '@playwright/test'
 
-test('test', async ({ page }) => {
+const pageURL = 'https://www.saucedemo.com'
+
+test('should sort products and add an item to the cart', async ({ page }) => {
   //navigate to
-  await page.goto('https://www.saucedemo.com')
-  await expect(page).toHaveURL('https://www.saucedemo.com')
+  await page.goto(pageURL)
+  await expect(page).toHaveURL(pageURL)
   await expect(page.getByText('Swag Labs')).toBeVisible()
   //login
   await page.getByPlaceholder('Username').fill('standard_user') // page.locator('[data-test="username"]').fill('standard_user')
   await page.getByPlaceholder('Password').fill('secret_sauce')
   await page.getByRole('button', { name: 'Login' }).click()
-  await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
+  await expect(page).toHaveURL(pageURL + '/inventory.html')
   await expect(page.getByText('Products')).toBeVisible()
   //sort products
   await page.getByText('Name (A to Z)Name (A to Z)').click()
@@ -36,7 +38,7 @@ test('test', async ({ page }) => {
 
   //workong with cart
   await page.locator('[data-test="shopping-cart-link"]').click()
-  await expect(page).toHaveURL('https://www.saucedemo.com/cart.html')
+  await expect(page).toHaveURL(pageURL + '/cart.html')
   const cartItem = page
     .locator('.cart_item_label')
     .filter({ hasText: 'Sauce Labs Fleece Jacket' })
