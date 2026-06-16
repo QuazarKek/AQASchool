@@ -1,31 +1,50 @@
-import { Player } from './Player'
-import { IPlanet } from './types'
-import { getPlanetData } from './api'
+import { Player } from './Player.js'
+import { IPlanet } from './types.js'
+import { getPlanetData } from './api.js'
+const promptSync = require('prompt-sync')
+const prompt = promptSync()
 
 export class Game {
   player: Player
+
   constructor(player: Player) {
     this.player = player
   }
 
-  start(): void {
-    let planetId = 1
-
+  async start(): Promise<void> {
     while (this.player.fuelLevel > 0) {
       try {
-        console.log('Travelling to Planet')
-        const planet: IPlanet = getPlanetData(planetId)
+        const input = prompt(
+          'Choose planet number to travel to (or type 0 to exit): ',
+        )
+
+        const planetId = Number(input)
+
+        if (planetId === 0) {
+          console.log('Player exited the game')
+          break
+        }
+
+        if (isNaN(planetId) || planetId < 1) {
+          console.log('Invalid planet number')
+          continue
+        }
+
+        console.log('Travelling to planet...')
+
+        const planet: IPlanet = await getPlanetData(planetId)
+
         console.log(`Arrived to ${planet.name}`)
+
         this.player.travel(planet.distance)
 
-        if (planet.event.type === 'resource') {
+        if (planet.event?.type === 'resource') {
           this.player.addResource(planet.event.resource)
-        } else if (planet.event.type === 'trader') {
+        } else if (planet.event?.type === 'trader') {
           console.log('Hi trader!')
-        } else if (planet.event === null) {
-          console.log('Nothing happaned')
+        } else {
+          console.log('Nothing happened')
         }
-        planetId++
       } catch (error) {
         console.log('Error:', (error as Error).message)
         break

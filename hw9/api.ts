@@ -1,4 +1,4 @@
-import { IPlanet, PlanetEvent } from './types'
+import { IPlanet, PlanetEvent } from './types.js'
 
 function generateEvent(): PlanetEvent {
   const rand = Math.random()
@@ -20,4 +20,23 @@ function generateEvent(): PlanetEvent {
   }
 
   return null
+}
+
+export function fetchData<T>(data: T): Promise<T> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(data)
+    }, 1000)
+  })
+}
+
+export async function getPlanetData(planetId: number): Promise<IPlanet> {
+  const planet: IPlanet = {
+    id: planetId,
+    name: `Planet-${planetId}`,
+    distance: Math.floor(Math.random() * 100),
+    event: generateEvent(),
+  }
+
+  return await fetchData<IPlanet>(planet)
 }
