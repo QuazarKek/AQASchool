@@ -1,6 +1,15 @@
+<<<<<<< Updated upstream
 import { Player } from './Player'
 import { IPlanet } from './types'
 import { getPlanetData } from './api'
+=======
+import { Player } from './Player.js'
+import { IPlanet } from './types.js'
+import { getPlanetData } from './api.js'
+const promptSync = require('prompt-sync')
+const prompt = promptSync()
+//import promptSync from 'prompt-sync'
+>>>>>>> Stashed changes
 
 export class Game {
   player: Player

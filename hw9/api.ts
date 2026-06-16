@@ -21,3 +21,25 @@ function generateEvent(): PlanetEvent {
 
   return null
 }
+<<<<<<< Updated upstream
+=======
+
+export function fetchData<T>(data: T): Promise<T> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(data)
+    }, 1000)
+  })
+}
+
+export function getPlanetData(planetId: number): Promise<IPlanet> {
+  const planet: IPlanet = {
+    id: planetId,
+    name: `Planet-${planetId}`,
+    distance: Math.floor(Math.random() * 100),
+    event: generateEvent(),
+  }
+
+  return fetchData<IPlanet>(planet)
+}
+>>>>>>> Stashed changes
