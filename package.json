@@ -17,6 +17,10 @@
   "homepage": "https://github.com/kseniiaorliuk/AQASchool#readme",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "@types/prompt-sync": "^4.2.3"
+  },
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
   }
 }

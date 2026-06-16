@@ -1,4 +1,4 @@
-import { IPlanet, PlanetEvent } from './types'
+import { IPlanet, PlanetEvent } from './types.js'
 
 function generateEvent(): PlanetEvent {
   const rand = Math.random()
@@ -21,8 +21,6 @@ function generateEvent(): PlanetEvent {
 
   return null
 }
-<<<<<<< Updated upstream
-=======
 
 export function fetchData<T>(data: T): Promise<T> {
   return new Promise((resolve) => {
@@ -32,7 +30,7 @@ export function fetchData<T>(data: T): Promise<T> {
   })
 }
 
-export function getPlanetData(planetId: number): Promise<IPlanet> {
+
   const planet: IPlanet = {
     id: planetId,
     name: `Planet-${planetId}`,
@@ -40,6 +38,8 @@ export function getPlanetData(planetId: number): Promise<IPlanet> {
     event: generateEvent(),
   }
 
-  return fetchData<IPlanet>(planet)
+
+
+  return await fetchData<IPlanet>(planet)
 }
->>>>>>> Stashed changes
+
