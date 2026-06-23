@@ -30,7 +30,7 @@ export function fetchData<T>(data: T): Promise<T> {
   })
 }
 
-export async function getPlanetData(planetId: number): Promise<IPlanet> {
+
   const planet: IPlanet = {
     id: planetId,
     name: `Planet-${planetId}`,
@@ -38,5 +38,8 @@ export async function getPlanetData(planetId: number): Promise<IPlanet> {
     event: generateEvent(),
   }
 
+
+
   return await fetchData<IPlanet>(planet)
 }
+
