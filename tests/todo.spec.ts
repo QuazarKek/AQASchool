@@ -8,6 +8,10 @@ test.beforeEach(async ({ page }) => {
   await todoPage.goto()
 })
 
+test.afterEach(async () => {
+  await todoPage.clearAllTodos()
+})
+
 test('should allow a user to add and complete a to-do item', async () => {
   //test.setTimeout(60000)
 
@@ -32,6 +36,7 @@ test('should allow a user to add and complete a to-do item', async () => {
 })
 
 test('should load the page with mocked to-do items', async ({ page }) => {
+  // в цьому випадку сторінка завантажується і тест працює як і очікується
   await page.route('**/*', async (route) => {
     const req = route.request()
     const url = req.url()
@@ -76,7 +81,43 @@ test('should load the page with mocked to-do items', async ({ page }) => {
   await expect(completedTodo).toHaveClass(/completed/)
 })
 
-test('should not add a to-do if the server returns an error', async ({
+test('should load the page with mocked to-do items11', async ({ page }) => {
+  // не працює, бо сторінка завантажується як текст
+  await page.route('**/api/todo', async (route) => {
+    const request = route.fetch()
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        {
+          id: 1,
+          completed: false,
+          order: 1,
+          title: 'Mocked Task 1',
+          url: 'https://azurewebsites.net',
+        },
+        {
+          id: 2,
+          completed: true,
+          order: 2,
+          title: 'Mocked Task 2',
+          url: 'https://azurewebsites.net',
+        },
+      ]),
+    })
+  })
+
+  await todoPage.goto()
+
+  await expect(todoPage.todoItems).toHaveCount(2)
+  await expect(todoPage.getTodoByText('Mocked Task 1')).toBeVisible()
+  await expect(todoPage.getTodoByText('Mocked Task 2')).toBeVisible()
+
+  const completedTodo = todoPage.getTodoByText('Mocked Task 2')
+  await expect(completedTodo).toHaveClass(/completed/)
+})
+
+test('should not add a to-do if the server returns an error*', async ({
   page,
 }) => {
   await page.route('**/*', async (route) => {
@@ -101,37 +142,77 @@ test('should not add a to-do if the server returns an error', async ({
   await expect(todoPage.todoItems).toHaveCount(0)
 })
 
-// test('should load the page with mocked to-do items111', async ({ page }) => {
-//   await page.route('**/api/todo', async (route) => {
-//     const request = route.fetch()
-//     await route.fulfill({
-//       status: 200,
-//       contentType: 'application/json',
-//       body: JSON.stringify([
-//         {
-//           id: 1,
-//           completed: false,
-//           order: 1,
-//           title: 'Mocked Task 1',
-//           url: 'https://azurewebsites.net',
-//         },
-//         {
-//           id: 2,
-//           completed: true,
-//           order: 2,
-//           title: 'Mocked Task 2',
-//           url: 'https://azurewebsites.net',
-//         },
-//       ]),
-//     })
-//   })
+test('should load the page with mocked to-do items2', async ({ page }) => {
+  //тест падає, бо сторінка завантажується як текст
+  await page.route('**/api/todo', async (route) => {
+    const request = route.fetch()
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        {
+          id: 1,
+          completed: false,
+          order: 1,
+          title: 'Mocked Task 1',
+          url: 'https://azurewebsites.net',
+        },
+        {
+          id: 2,
+          completed: true,
+          order: 2,
+          title: 'Mocked Task 2',
+          url: 'https://azurewebsites.net',
+        },
+      ]),
+    })
+  })
 
-//   await todoPage.goto()
+  await todoPage.goto()
 
-//   await expect(todoPage.todoItems).toHaveCount(2)
-//   await expect(todoPage.getTodoByText('Mocked Task 1')).toBeVisible()
-//   await expect(todoPage.getTodoByText('Mocked Task 2')).toBeVisible()
+  await expect(todoPage.todoItems).toHaveCount(2)
+  await expect(todoPage.getTodoByText('Mocked Task 1')).toBeVisible()
+  await expect(todoPage.getTodoByText('Mocked Task 2')).toBeVisible()
 
-//   const completedTodo = todoPage.getTodoByText('Mocked Task 2')
-//   await expect(completedTodo).toHaveClass(/completed/)
-// })
+  const completedTodo = todoPage.getTodoByText('Mocked Task 2')
+  await expect(completedTodo).toHaveClass(/completed/)
+})
+
+test('should load the page with mocked to-do items3', async ({ page }) => {
+  //тест падає, бо сторінка завантажується як текст
+  await page.route('**/api/v1/todo', async (route) => {
+    if (route.request().method() !== 'GET') {
+      return route.continue()
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        {
+          id: 1,
+          title: 'Mocked Task 1',
+          completed: false,
+          url: 'https://csharp-todo-backend.azurewebsites.net/api/v1/todo/1',
+          order: 1,
+        },
+        {
+          id: 2,
+          title: 'Mocked Task 2',
+          completed: true,
+          url: 'https://csharp-todo-backend.azurewebsites.net/api/v1/todo/2',
+          order: 2,
+        },
+      ]),
+    })
+  })
+
+  await todoPage.goto()
+
+  await expect(todoPage.todoItems).toHaveCount(2)
+  await expect(todoPage.getTodoByText('Mocked Task 1')).toBeVisible()
+  await expect(todoPage.getTodoByText('Mocked Task 2')).toBeVisible()
+
+  const completedTodo = todoPage.getTodoByText('Mocked Task 2')
+  await expect(completedTodo).toHaveClass(/completed/)
+})

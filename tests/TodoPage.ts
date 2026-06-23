@@ -58,4 +58,9 @@ export class TodoPage {
       has: this.page.getByText(todoText),
     })
   }
+
+  async clearAllTodos() {
+  const requestContext = this.page.request;
+  await requestContext.delete('https://csharp-todo-backend.azurewebsites.net/api/v1/todo');
+}
 }
