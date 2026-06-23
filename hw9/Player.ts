@@ -1,4 +1,4 @@
-import { IPlayer, Resource } from './types'
+import { IPlayer, Resource } from './types.js'
 
 export class Player implements IPlayer {
   name: string
@@ -14,7 +14,9 @@ export class Player implements IPlayer {
     if (distance > this.fuelLevel) {
       throw new Error('Not enough fuel!')
     }
+
     this.fuelLevel -= distance
+
     console.log(
       `Player ${this.name} traveled ${distance}. Fuel left: ${this.fuelLevel}`,
     )
@@ -22,8 +24,9 @@ export class Player implements IPlayer {
 
   addResource(resource: Resource): void {
     this.inventory.push(resource)
+
     console.log(
-      `Player ${this.name} found ${resource.name} in ${resource.value} quanity`,
+      `Player ${this.name} found ${resource.name} with value ${resource.value}`,
     )
   }
 }
