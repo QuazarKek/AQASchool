@@ -37,7 +37,7 @@ test('should allow a user to add and complete a to-do item', async () => {
 
 test('should load the page with mocked to-do items', async ({ page }) => {
   // в цьому випадку сторінка завантажується і тест працює як і очікується
-  await page.route('**/*', async (route) => {
+  await page.route('**/*', async (route) => {//тут ти передаєш в route будь-який урл, який ти хочеш замокати, і тоді коли сторінка буде робити запит на цей урл, то замість того щоб робити реальний запит на сервер, вона буде отримувати дані які ти передаєш в route.fulfill. А ти не вказала конкретний урл, а просто передала **/*, і тоді всі запити будуть замокані, а потім ти в середині перевіряєш чи це GET запит, і чи це запит на урл який містить /todo, і чи це xhr та fetch і так ти відфільтровуєш запити, і так ти замокала його...і так буває що треба, але зазвичай ми замокаємо конкретний урл, бо тоді ми точно знаємо що ми замокали саме той запит який нам потрібен, а не всі запити які робить сторінка. Тому так не робимо, передаємо урлу.
     const req = route.request()
     const url = req.url()
 
@@ -83,8 +83,8 @@ test('should load the page with mocked to-do items', async ({ page }) => {
 
 test('should load the page with mocked to-do items11', async ({ page }) => {
   // не працює, бо сторінка завантажується як текст
-  await page.route('**/api/todo', async (route) => {
-    const request = route.fetch()
+  await page.route('**/api/todo', async (route) => {//тут ти передала частину урли, але не всю, і там така не одна... тре передати оце https://csharp-todo-backend.azurewebsites.net/api/v1/todo
+    const request = route.fetch()//це шо і нашо?
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -179,7 +179,7 @@ test('should load the page with mocked to-do items2', async ({ page }) => {
 })
 
 test('should load the page with mocked to-do items3', async ({ page }) => {
-  //тест падає, бо сторінка завантажується як текст
+  //тест падає, бо сторінка завантажується як текст 
   await page.route('**/api/v1/todo', async (route) => {
     if (route.request().method() !== 'GET') {
       return route.continue()
